@@ -1,18 +1,18 @@
 package chapter2;
 
 /**
- * 数组中间插入
+ * 扩容插入
  * 
  * @author hilih
  *
  */
-public class ArrayInsert_2 {
+public class ArrayInsert_3 {
 
 	private int[] array;
-	/** 下标记录 */
+	//当前数组内拥有的元素数量
 	private int size;
 
-	public ArrayInsert_2(int capacity) {
+	public ArrayInsert_3(int capacity) {
 		this.array = new int[capacity];
 		size = 0;
 	}
@@ -24,17 +24,22 @@ public class ArrayInsert_2 {
 	 * @param index   插入的位置
 	 */
 	public void insert(int element, int index) {
-		// 判断访问下标是否超出范围
+		// 访问下标是否越界
 		if (index < 0 || index > size) {
-			throw new IndexOutOfBoundsException();
+			throw new IndexOutOfBoundsException("超出数组实际元素范围！");
 		}
-
-		// 开始移动元素的下标位置
+		// 如果实际元素达到数组容量上限，则对数组进行扩容
+		if (size == array.length) {
+			resize();
+		}
+		
+		//开始移动元素的下标位置
 		int start = 0;
 		if (size > 0) {
 			start = size - 1;
 		}
-
+		
+		//要移动元素的次数
 		// 从右向左循环，将元素逐个向右挪一位
 		for (int round = size - index; index >= 0 && round >= 0 && start >= 0; round--) {
 			array[start + 1] = array[start];
@@ -46,6 +51,19 @@ public class ArrayInsert_2 {
 		size++;
 	}
 
+	/**
+	 * 数组扩容
+	 */
+	public void resize() {
+		int[] arrayNew = new int[array.length * 2];
+		// 元素从旧数组复制到新数组
+		System.arraycopy(array, 0, arrayNew, 0, array.length);
+		array = arrayNew;
+	}
+
+	/**
+	 * 输出数组
+	 */
 	public void output() {
 		for (int i = 0; i < size; i++) {
 			System.out.println(array[i]);
@@ -53,13 +71,12 @@ public class ArrayInsert_2 {
 	}
 
 	public static void main(String[] args) {
-		ArrayInsert_2 myArray = new ArrayInsert_2(10);
+		ArrayInsert_3 myArray = new ArrayInsert_3(4);
 		myArray.insert(3, 0);
 		myArray.insert(7, 1);
-		myArray.insert(9, 2);
-		myArray.insert(5, 3);
-		myArray.insert(6, 1);
-		myArray.insert(4, 0);
+		myArray.insert(9, 1);
+		myArray.insert(5, 2);
+		myArray.insert(6, 2);
 		myArray.output();
 	}
 
